@@ -11,6 +11,7 @@ const HtmlWebpackInjectPreload = require("@principalstudio/html-webpack-inject-p
 const { version } = require("./package.json");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const VersionFilePlugin = require("webpack-version-file-plugin");
+const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
 
 // Environment variables
 // RIOT_OG_IMAGE_URL: specifies the URL to the image which should be used for the opengraph logo.
@@ -692,6 +693,13 @@ module.exports = (env, argv) => {
                 outputFile: "version",
                 templateString: "<%= extras.VERSION %>",
                 extras: { VERSION },
+            }),
+
+            // Due to issues such as https://github.com/vector-im/element-web/issues/25277 we should retry chunk loading
+            new RetryChunkLoadPlugin({
+                cacheBust: `() => Date.now()`,
+                retryDelay: 500,
+                maxRetries: 3,
             }),
         ].filter(Boolean),
 
