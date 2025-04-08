@@ -676,6 +676,12 @@ module.exports = (env, argv) => {
                     { from: "config.json", noErrorOnMissing: true },
                     { from: "*.json", context: path.resolve(__dirname, "conf.d"), noErrorOnMissing: true },
                     "contribute.json",
+                    // Element Call embedded widget
+                    {
+                        from: "**",
+                        context: path.resolve(__dirname, "node_modules/@element-hq/element-call-embedded/dist"),
+                        to: path.join(__dirname, "webapp", "widgets", "element-call"),
+                    },
                 ],
             }),
 
