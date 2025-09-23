@@ -43,8 +43,7 @@ import { isVideoRoom } from "../utils/video-rooms";
 import { FontWatcher } from "../settings/watchers/FontWatcher";
 import { type JitsiCallMemberContent, JitsiCallMemberEventType } from "../call-types";
 import SdkConfig from "../SdkConfig.ts";
-import RoomListStore from "../stores/room-list/RoomListStore.ts";
-import { DefaultTagID } from "../stores/room-list/models.ts";
+import DMRoomMap from "../utils/DMRoomMap.ts";
 
 const TIMEOUT_MS = 16000;
 
@@ -542,6 +541,13 @@ export class JitsiCall extends Call {
     };
 }
 
+export enum ElementCallIntent {
+    StartCall = "start_call",
+    JoinExisting = "join_existing",
+    StartCallDM = "start_call_dm",
+    JoinExistingDM = "join_existing_dm",
+}
+
 /**
  * A group call using MSC3401 and Element Call as a backend.
  * (somewhat cheekily named)
@@ -586,10 +592,31 @@ export class ElementCall extends Call {
 
         const room = client.getRoom(roomId);
         if (room !== null && !isVideoRoom(room)) {
-            params.append(
-                "sendNotificationType",
-                RoomListStore.instance.getTagsForRoom(room).includes(DefaultTagID.DM) ? "ring" : "notification",
-            );
+            const isDM = !!DMRoomMap.shared().getUserIdForRoomId(room.roomId);
+            const oldestCallMember = client.matrixRTC.getRoomSession(room).getOldestMembership();
+            const hasCallStarted = !!oldestCallMember && oldestCallMember.sender !== client.getSafeUserId();
+            // XXX: @element-hq/element-call-embedded <= 0.15.0 sets the wrong parameter for
+            // preload by default so we override here. This can be removed when that package
+            // is released and upgraded.
+            if (isDM) {
+                params.append("sendNotificationType", "ring");
+                if (hasCallStarted) {
+                    params.append("intent", ElementCallIntent.JoinExistingDM);
+                    params.append("preload", "false");
+                } else {
+                    params.append("intent", ElementCallIntent.StartCallDM);
+                    params.append("preload", "false");
+                }
+            } else {
+                params.append("sendNotificationType", "notification");
+                if (hasCallStarted) {
+                    params.append("intent", ElementCallIntent.JoinExisting);
+                    params.append("preload", "false");
+                } else {
+                    params.append("intent", ElementCallIntent.StartCall);
+                    params.append("preload", "false");
+                }
+            }
         }
 
         const rageshakeSubmitUrl = SdkConfig.get("bug_report_endpoint_url");
