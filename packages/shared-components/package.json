@@ -1,6 +1,6 @@
 {
     "name": "@element-hq/web-shared-components",
-    "version": "0.0.0-test.5",
+    "version": "0.0.0-test.6",
     "description": "Shared components for Element",
     "author": "New Vector Ltd.",
     "repository": {
@@ -31,6 +31,7 @@
     ],
     "scripts": {
         "postinstall": "patch-package",
+        "prepare": "vite build",
         "storybook": "storybook dev -p 6007",
         "build-storybook": "storybook build",
         "lint": "yarn lint:types && yarn lint:js",
@@ -42,7 +43,8 @@
     },
     "dependencies": {
         "matrix-web-i18n": "^3.4.0",
-        "patch-package": "^8.0.1"
+        "patch-package": "^8.0.1",
+        "counterpart": "^0.18.6"
     },
     "devDependencies": {
         "@storybook/addon-a11y": "^9.1.10",
@@ -53,7 +55,6 @@
         "@storybook/test-runner": "^0.23.0",
         "concurrently": "^9.2.1",
         "eslint": "8",
-        "jest-image-snapshot": "^6.5.1",
         "eslint-plugin-storybook": "^9.1.10",
         "jest-image-snapshot": "^6.5.1",
         "patch-package": "^8.0.1",
