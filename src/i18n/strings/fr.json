@@ -805,6 +805,17 @@
         },
         "developer_mode": "Mode développeur",
         "developer_tools": "Outils de développement",
+        "device_dehydrated_no": "Déshydraté : Non",
+        "device_dehydrated_yes": "Déshydraté : Oui",
+        "device_id": "Identifiant de l'appareil : %(deviceId)s",
+        "device_keys": "Clés d'appareil",
+        "device_verification_status": {
+            "signed_by_owner": "Statut de vérification : <E2EIcon /> Signé par le propriétaire",
+            "unknown": "Statut de vérification : Inconnu",
+            "unverified": "Statut de vérification : <E2EIcon /> Non signé par le propriétaire",
+            "verified": "Statut de vérification : <E2EIcon /> Vérifié par signature croisée"
+        },
+        "devices": "Appareils cryptographiques (%(count)s )",
         "edit_setting": "Modifier le paramètre",
         "edit_values": "Modifier les valeurs",
         "empty_string": "<chaîne de caractères vide>",
@@ -1474,7 +1485,6 @@
         "upload_file": "Envoyer un fichier"
     },
     "labs": {
-        "allow_screen_share_only_mode": "Activer le mode partage d’écran uniquement",
         "ask_to_join": "Activer demander à venir",
         "automatic_debug_logs": "Envoyer automatiquement les journaux de débogage en cas d’erreur",
         "automatic_debug_logs_decryption": "Envoyer automatiquement les journaux de débogage en cas d’erreurs de déchiffrement",
